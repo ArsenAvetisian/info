@@ -6,7 +6,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
   </head>
   <body data-new-gr-c-s-check-loaded="14.1204.0" data-gr-ext-installed="">
-    <input type="file" id="fileInput" accept=".docx" />
     <div id="docxContent">
       <h2>
         Réf. doc : 20241030-8659 - Date : 30/10/2024 Concerne : AVETISIAN ARSEN
@@ -94,33 +93,6 @@
         https://certif.belgium.be/record/f894d20a-2d52-4494-9f1e-1c7b065e5d75-CJCS
       </p>
     </div>
-
-    <script>
-      document
-        .getElementById("fileInput")
-        .addEventListener("change", async (event) => {
-          const file = event.target.files[0];
-          if (file && file.name.endsWith(".docx")) {
-            try {
-              const arrayBuffer = await file.arrayBuffer();
-              mammoth
-                .convertToHtml({ arrayBuffer })
-                .then((result) => {
-                  document.getElementById("docxContent").innerHTML =
-                    result.value;
-                })
-                .catch((error) => {
-                  console.error("Error converting DOCX to HTML:", error);
-                });
-            } catch (error) {
-              console.error("Error reading file:", error);
-            }
-          } else {
-            alert("Please upload a valid .docx file.");
-          }
-        });
-    </script>
-
     <script
       type="text/javascript"
       src="chrome-extension://mljponncmhdlacmjbophphkbgcgjdnff/scripts/inject-script.js"
