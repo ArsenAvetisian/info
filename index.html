@@ -3,77 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Info about me</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f0f0f0;
-      }
-      .profile {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        font-size: 24px;
-        margin-bottom: 20px;
-      }
-      #docx-content {
-        background-color: #ffffff;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 80%;
-        max-width: 600px;
-        overflow: auto;
-        font-size: 16px;
-      }
-    </style>
+    <title>Display DOCX Content</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
   </head>
   <body>
-    <div class="profile">Yeva Balasanyan</div>
-
-    <!-- File input to upload the docx file -->
-    <input
-      type="file"
-      id="upload-docx"
-      accept=".docx"
-      style="margin-bottom: 20px"
-    />
-
-    <!-- Div to display the content of the docx file -->
-    <div id="docx-content">Content of your document will appear here...</div>
+    <input type="file" id="fileInput" accept=".docx" />
+    <div id="docxContent"></div>
 
     <script>
       document
-        .getElementById("upload-docx")
-        .addEventListener("change", function (event) {
-          const reader = new FileReader();
-          reader.onload = function (event) {
-            mammoth
-              .convertToHtml({ arrayBuffer: event.target.result })
-              .then(displayResult)
-              .catch(handleError);
-          };
-          reader.readAsArrayBuffer(this.files[0]);
+        .getElementById("fileInput")
+        .addEventListener("change", async (event) => {
+          const file = event.target.files[0];
+          if (file && file.name.endsWith(".docx")) {
+            try {
+              const arrayBuffer = await file.arrayBuffer();
+              mammoth
+                .convertToHtml({ arrayBuffer })
+                .then((result) => {
+                  document.getElementById("docxContent").innerHTML =
+                    result.value;
+                })
+                .catch((error) => {
+                  console.error("Error converting DOCX to HTML:", error);
+                });
+            } catch (error) {
+              console.error("Error reading file:", error);
+            }
+          } else {
+            alert("Please upload a valid .docx file.");
+          }
         });
-
-      function displayResult(result) {
-        document.getElementById("docx-content").innerHTML = result.value;
-      }
-
-      function handleError(err) {
-        console.error(err);
-        document.getElementById("docx-content").innerHTML =
-          "Could not display the document content.";
-      }
     </script>
   </body>
 </html>
